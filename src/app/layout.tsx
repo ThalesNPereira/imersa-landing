@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PostHogInit } from "@/components/analytics/posthog-init";
 import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
@@ -27,7 +28,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className={bodyClassName}>{children}</body>
+      <body className={bodyClassName}>
+        <PostHogInit />
+        {children}
+      </body>
     </html>
   );
 }

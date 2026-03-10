@@ -5,7 +5,6 @@ import { HeroSection } from "@/components/landing/hero-section";
 import { HowItWorksSection } from "@/components/landing/how-it-works-section";
 import { ProductPreviewSection } from "@/components/landing/product-preview-section";
 import { SiteHeader } from "@/components/landing/site-header";
-import { SocialProofSection } from "@/components/landing/social-proof-section";
 import { TestimonialSection } from "@/components/landing/testimonial-section";
 import { landingContent } from "@/content/landing";
 
@@ -23,10 +22,6 @@ export default function Home() {
           ctaLabel={landingContent.hero.primaryCtaLabel}
         />
         <HeroSection content={landingContent.hero} />
-        <SocialProofSection
-          content={landingContent.socialProof}
-          logos={landingContent.logos}
-        />
         <HowItWorksSection
           eyebrow={landingContent.howItWorks.eyebrow}
           title={landingContent.howItWorks.title}

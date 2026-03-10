@@ -10,7 +10,7 @@ type ContainerProps = {
 };
 
 type SectionIntroProps = {
-  eyebrow: string;
+  eyebrow?: string;
   title: string;
   description: string;
   tone?: "light" | "dark";
@@ -44,17 +44,20 @@ export function SectionIntro({
 
   return (
     <div className={cx("max-w-3xl", isCentered && "mx-auto text-center")}>
-      <p
-        className={cx(
-          "text-xs font-medium uppercase tracking-[0.32em]",
-          isDark ? "text-[#9fb6c9]" : "text-[#6b7280]",
-        )}
-      >
-        {eyebrow}
-      </p>
+      {eyebrow ? (
+        <p
+          className={cx(
+            "text-xs font-medium uppercase tracking-[0.32em]",
+            isDark ? "text-[#9fb6c9]" : "text-[#6b7280]",
+          )}
+        >
+          {eyebrow}
+        </p>
+      ) : null}
       <h2
         className={cx(
-          "mt-4 font-display text-3xl leading-tight tracking-[-0.05em] sm:text-4xl lg:text-[3.25rem]",
+          eyebrow && "mt-4",
+          "font-display text-3xl leading-tight tracking-[-0.05em] sm:text-4xl lg:text-[3.25rem]",
           isDark ? "text-white" : "text-[#111418]",
         )}
       >

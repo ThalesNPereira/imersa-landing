@@ -25,9 +25,15 @@ export function BenefitsSection({ benefits, intro }: BenefitsSectionProps) {
               <Reveal key={benefit.id} delay={0.06 + index * 0.06}>
                 <article className="h-full rounded-[1.8rem] border border-black/8 bg-white/72 p-6 shadow-[0_18px_50px_rgba(17,20,24,0.06)] backdrop-blur">
                   <div className="flex items-start justify-between gap-4">
-                    <span className="rounded-full border border-black/8 bg-[#f2ede4] px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-[#697786]">
-                      {benefit.outcome}
-                    </span>
+                    {benefit.outcome ? (
+                      <span className="rounded-full border border-black/8 bg-[#f2ede4] px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-[#697786]">
+                        {benefit.outcome}
+                      </span>
+                    ) : (
+                      <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-black/8 bg-[#f2ede4] text-xs font-semibold uppercase tracking-[0.24em] text-[#697786]">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                    )}
                     <span className="h-10 w-10 rounded-full bg-[linear-gradient(135deg,#d8c2a6,#c3d7e6)]" />
                   </div>
 

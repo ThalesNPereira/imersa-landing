@@ -9,12 +9,12 @@ export type HeroMetric = {
 };
 
 export type HeroContent = {
-  eyebrow: string;
+  eyebrow?: string;
   title: string;
   description: string;
   primaryCtaLabel: string;
-  secondaryCtaLabel: string;
-  secondaryCtaHref: string;
+  secondaryCtaLabel?: string;
+  secondaryCtaHref?: string;
   highlights: string[];
   previewTitle: string;
   previewDescription: string;
@@ -37,8 +37,7 @@ export type StepItem = {
   id: string;
   number: string;
   title: string;
-  description: string;
-  detail: string;
+  support: string;
 };
 
 export type ProductPreviewMetric = {
@@ -73,11 +72,11 @@ export type BenefitItem = {
   id: string;
   title: string;
   description: string;
-  outcome: string;
+  outcome?: string;
 };
 
 export type BenefitsContent = {
-  eyebrow: string;
+  eyebrow?: string;
   title: string;
   description: string;
 };
@@ -116,30 +115,29 @@ export type FaqContent = {
 export const landingContent = {
   headerLinks: [
     { href: "#como-funciona", label: "Como funciona" },
-    { href: "#preview-produto", label: "Preview" },
-    { href: "#beneficios", label: "Beneficios" },
+    { href: "#preview-produto", label: "Demonstra\u00e7\u00e3o" },
+    { href: "#beneficios", label: "Vantagens" },
     { href: "#faq", label: "FAQ" },
   ] satisfies HeaderLink[],
   hero: {
-    eyebrow: "Experiencia interativa para imoveis",
-    title: "Destaque cada listagem com uma experiencia visual mais clara e mais memoravel.",
+    title: "Transforme fotos de im\u00f3veis em experi\u00eancias imersivas",
     description:
-      "A imersa transforma a pagina do imovel em uma experiencia interativa, sem captura 3D e pronta para publicar com embed simples.",
-    primaryCtaLabel: "Agendar demo",
-    secondaryCtaLabel: "Ver preview",
+      "A imersa ajuda imobili\u00e1rias a publicar experi\u00eancias interativas a partir das fotos do an\u00fancio, direto no pr\u00f3prio site.",
+    primaryCtaLabel: "Agendar demonstra\u00e7\u00e3o",
+    secondaryCtaLabel: "Ver demonstra\u00e7\u00e3o",
     secondaryCtaHref: "#preview-produto",
     highlights: [
-      "Listagens mais diferenciadas",
-      "Sem fluxo de captura 3D",
-      "Embed pronto para WordPress",
+      "Sem captura 3D",
+      "Publica\u00e7\u00e3o no seu pr\u00f3prio site",
+      "Compat\u00edvel com WordPress e sites customizados",
     ],
-    previewTitle: "Placeholder da experiencia principal",
+    previewTitle: "Experi\u00eancia imersiva publicada no seu site",
     previewDescription:
-      "Esta area representa a visualizacao interativa do produto e sera substituida pela demo real.",
+      "Navega\u00e7\u00e3o guiada com hotspots, destaques do im\u00f3vel e embed pronto para capta\u00e7\u00e3o e vendas.",
     previewMetrics: [
-      { label: "Formato", value: "Web embed" },
-      { label: "Entrada", value: "Fotos + video" },
-      { label: "Publicacao", value: "Site ou portal" },
+      { label: "Entrada", value: "Fotos do an\u00fancio" },
+      { label: "Publica\u00e7\u00e3o", value: "No seu pr\u00f3prio site" },
+      { label: "Integra\u00e7\u00e3o", value: "WordPress e customizados" },
     ],
   } satisfies HeroContent,
   socialProof: {
@@ -158,35 +156,32 @@ export const landingContent = {
     { id: "06", label: "Marca 06" },
   ] satisfies LogoItem[],
   howItWorks: {
-    eyebrow: "Como funciona",
-    title: "Tres etapas simples para sair do material bruto para uma experiencia publicada.",
+    eyebrow: "Em 3 passos",
+    title: "Como funciona",
     description:
-      "O objetivo desta secao e explicar o fluxo com clareza visual e sem parecer um processo tecnico pesado.",
+      "Transformamos as fotos do imóvel em uma experiência imersiva pronta para publicar no seu site.",
   },
   steps: [
     {
-      id: "entrada",
+      id: "fotos",
       number: "01",
-      title: "Receba o material",
-      description:
-        "Use fotos, video ou renders que o time comercial ja possui para montar a experiencia.",
-      detail: "Sem hardware novo. Sem captura 3D.",
+      title: "Envie as fotos do imóvel",
+      support:
+        "Use as imagens que você já tem no anúncio, sem captura 3D ou equipamentos especiais.",
     },
     {
-      id: "estrutura",
+      id: "geracao",
       number: "02",
-      title: "Organizamos a navegacao",
-      description:
-        "A imersa estrutura hotspots, sequencia visual e contexto para destacar o imovel.",
-      detail: "Fluxo guiado para web e vendas.",
+      title: "A imersa gera a experiência",
+      support:
+        "Processamos as imagens, montamos o ambiente imersivo e fazemos ajustes manuais quando necessário para garantir qualidade.",
     },
     {
       id: "publicacao",
       number: "03",
-      title: "Publique com embed",
-      description:
-        "A experiencia entra no WordPress ou em site customizado por meio de um embed simples.",
-      detail: "Pronto para paginas de produto e campanhas.",
+      title: "Publique no seu site",
+      support:
+        "Hospedamos a experiência e entregamos um viewer pronto para incorporar no WordPress ou em sites customizados.",
     },
   ] satisfies StepItem[],
   productPreview: {
@@ -242,39 +237,34 @@ export const landingContent = {
     ],
   } satisfies ProductPreviewContent,
   benefitsIntro: {
-    eyebrow: "Por que imersa",
-    title: "Os beneficios desta landing ja apontam para o resultado, nao para a tecnologia pela tecnologia.",
+    title: "Por que usar a imersa",
     description:
-      "Cada card abaixo funciona como placeholder para mensagens comerciais mais fortes quando o posicionamento final estiver fechado.",
+      "Uma nova forma de apresentar im\u00f3veis com mais impacto, sem mudar sua opera\u00e7\u00e3o.",
   } satisfies BenefitsContent,
   benefits: [
     {
       id: "diferenciacao",
-      title: "Listagens mais diferenciadas",
+      title: "Destaque seus an\u00fancios",
       description:
-        "Reserve espaco para explicar como a experiencia valoriza o imovel e cria percepcao premium na pagina.",
-      outcome: "Mais percepcao de valor",
+        "Ofere\u00e7a uma experi\u00eancia mais moderna e diferenciada do que galerias de fotos est\u00e1ticas.",
     },
     {
       id: "sem-3d",
       title: "Sem captura 3D",
       description:
-        "Deixe claro que o fluxo parte do material ja existente, reduzindo friccao operacional e custo inicial.",
-      outcome: "Operacao mais leve",
+        "Use as fotos que voc\u00ea j\u00e1 tem, sem equipamentos, visitas t\u00e9cnicas ou produ\u00e7\u00e3o adicional.",
     },
     {
       id: "embed",
-      title: "Embed simples",
+      title: "Publique no seu pr\u00f3prio site",
       description:
-        "Mostre que o time consegue publicar no site proprio com implementacao enxuta e sem replatforming.",
-      outcome: "Entrada rapida no ar",
+        "A experi\u00eancia fica pronta para incorporar no WordPress ou em sites customizados.",
     },
     {
-      id: "engajamento",
-      title: "Melhor engajamento",
+      id: "marca",
+      title: "Mais valor para a marca da imobili\u00e1ria",
       description:
-        "Use esta mensagem para conectar experiencia visual com mais tempo na pagina e interesse qualificado.",
-      outcome: "Mais tempo e atencao",
+        "Apresente im\u00f3veis de forma mais sofisticada, aumente percep\u00e7\u00e3o de inova\u00e7\u00e3o e fortale\u00e7a sua presen\u00e7a digital.",
     },
   ] satisfies BenefitItem[],
   testimonial: {
