@@ -3,11 +3,6 @@ export type HeaderLink = {
   label: string;
 };
 
-export type HeroMetric = {
-  label: string;
-  value: string;
-};
-
 export type HeroContent = {
   eyebrow?: string;
   title: string;
@@ -15,10 +10,6 @@ export type HeroContent = {
   primaryCtaLabel: string;
   secondaryCtaLabel?: string;
   secondaryCtaHref?: string;
-  highlights: string[];
-  previewTitle: string;
-  previewDescription: string;
-  previewMetrics: HeroMetric[];
 };
 
 export type SocialProofContent = {
@@ -96,8 +87,7 @@ export type BookDemoContent = {
   eyebrow: string;
   title: string;
   description: string;
-  placeholderLabel: string;
-  checklist: string[];
+  proofPoints: string[];
 };
 
 export type FaqItem = {
@@ -126,19 +116,6 @@ export const landingContent = {
     primaryCtaLabel: "Agendar demonstra\u00e7\u00e3o",
     secondaryCtaLabel: "Ver demonstra\u00e7\u00e3o",
     secondaryCtaHref: "#preview-produto",
-    highlights: [
-      "Sem captura 3D",
-      "Publica\u00e7\u00e3o no seu pr\u00f3prio site",
-      "Compat\u00edvel com WordPress e sites customizados",
-    ],
-    previewTitle: "Experi\u00eancia imersiva publicada no seu site",
-    previewDescription:
-      "Navega\u00e7\u00e3o guiada com hotspots, destaques do im\u00f3vel e embed pronto para capta\u00e7\u00e3o e vendas.",
-    previewMetrics: [
-      { label: "Entrada", value: "Fotos do an\u00fancio" },
-      { label: "Publica\u00e7\u00e3o", value: "No seu pr\u00f3prio site" },
-      { label: "Integra\u00e7\u00e3o", value: "WordPress e customizados" },
-    ],
   } satisfies HeroContent,
   socialProof: {
     eyebrow: "Prova social",
@@ -280,14 +257,13 @@ export const landingContent = {
   } satisfies TestimonialContent,
   bookDemo: {
     eyebrow: "Agendar demo",
-    title: "Area reservada para o embed do Cal.com com CTA forte perto do fechamento da pagina.",
+    title: "Veja a imersa aplicada ao seu portfolio em uma conversa objetiva.",
     description:
-      "Nesta primeira versao, o embed permanece como placeholder visual. A secao ja esta pronta para receber o agendamento real depois.",
-    placeholderLabel: "Placeholder do embed do Cal.com",
-    checklist: [
-      "Substituir pelo evento real do Cal.com",
-      "Adicionar tracking de clique e conclusao",
-      "Confirmar responsavel comercial e agenda",
+      "Escolha um horario e entenda como transformar fotos de imoveis em uma experiencia interativa publicada no seu proprio site.",
+    proofPoints: [
+      "Demo guiada com foco no seu processo comercial.",
+      "Sem preparo tecnico da sua equipe antes da conversa.",
+      "Fluxo pensado para imobiliarias, incorporadoras e paginas proprietarias.",
     ],
   } satisfies BookDemoContent,
   faqIntro: {
