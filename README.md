@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## imersa Landing
 
-## Getting Started
+Marketing site for `imersa`, built with Next.js and prepared for Cloudflare Workers via OpenNext.
 
-First, run the development server:
+## Local development
+
+Install dependencies and start the app:
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Copy `.env.example` and set the public values used by the landing page:
 
-## Learn More
+```bash
+NEXT_PUBLIC_SITE_URL=https://imersa.io
+NEXT_PUBLIC_CAL_LINK=
+NEXT_PUBLIC_POSTHOG_TOKEN=
+NEXT_PUBLIC_POSTHOG_HOST=
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Cloudflare deployment
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+This repository is configured for Cloudflare Workers with:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `wrangler.jsonc` for the Worker runtime, R2 incremental cache, and custom domains
+- `open-next.config.ts` for the OpenNext Cloudflare adapter
+- `public/_headers` for static asset caching
+- `npm run preview` for local Workers preview
+- `npm run deploy` for production deployment
 
-## Deploy on Vercel
+Use these commands:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run lint
+npm run build
+npm run preview
+npm run deploy
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Production checklist
+
+Before the final deploy, confirm:
+
+- the Cloudflare zone for `imersa.io` is active
+- the registrar nameservers point to Cloudflare
+- `NEXT_PUBLIC_SITE_URL` is set to `https://imersa.io`
+- the Cal.com booking link and PostHog variables are set in Cloudflare
+- `npm run deploy` finishes without route or domain errors
+
+## SEO surfaces included
+
+The app now ships with:
+
+- canonical metadata for `https://imersa.io`
+- Open Graph and Twitter cards
+- `robots.txt`
+- `sitemap.xml`
+- `manifest.webmanifest`
+- JSON-LD for `Organization`, `WebSite`, `Service`, and `FAQPage`
