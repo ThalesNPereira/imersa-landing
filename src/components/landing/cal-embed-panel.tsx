@@ -16,10 +16,6 @@ const UTM_KEYS = [
   "utm_content",
 ] as const;
 
-type CalEmbedPanelProps = {
-  placeholderLabel: string;
-};
-
 type EmbedStatus = "loading" | "ready" | "fallback";
 
 type FallbackReason =
@@ -290,104 +286,130 @@ function bootstrapCal() {
   return window.Cal;
 }
 
-function getFallbackMessage(reason: FallbackReason) {
-  switch (reason) {
-    case "missing_cal_link":
-      return "Configure NEXT_PUBLIC_CAL_LINK para ativar o agendamento ao vivo nesta area.";
-    case "invalid_cal_link":
-      return "O valor de NEXT_PUBLIC_CAL_LINK esta invalido. Use um slug do Cal.com ou uma URL completa.";
-    case "script_load_failed":
-      return "Nao foi possivel carregar o script do calendario agora. O layout foi mantido como fallback.";
-    case "init_failed":
-      return "Nao foi possivel iniciar o embed do calendario neste momento. O layout foi mantido como fallback.";
-    default:
-      return "Reservado para o embed real do calendario comercial.";
+function getCurrentPathname() {
+  if (typeof window === "undefined") {
+    return undefined;
   }
+
+  return window.location.pathname;
 }
 
-function LoadingCard() {
+function PanelChrome() {
   return (
-    <div className="absolute inset-0 z-10 rounded-[1.2rem] bg-white p-4 sm:p-5">
-      <div className="flex h-full flex-col">
-        <div className="flex items-center justify-between gap-4 border-b border-black/6 pb-4">
-          <div>
-            <div className="h-4 w-36 animate-pulse rounded-full bg-[#d7e5ef]" />
-            <div className="mt-3 h-4 w-56 animate-pulse rounded-full bg-[#eef3f6]" />
-          </div>
-          <div className="h-9 w-24 animate-pulse rounded-full bg-[#eef3f6]" />
-        </div>
+    <div className="flex items-center justify-between gap-3 px-2 pb-3">
+      <div className="flex items-center gap-2">
+        <span className="h-3 w-3 rounded-full bg-[#e8b0a5]" />
+        <span className="h-3 w-3 rounded-full bg-[#e7cd7d]" />
+        <span className="h-3 w-3 rounded-full bg-[#8fb7d1]" />
+      </div>
 
-        <div className="mt-5 grid flex-1 gap-4 sm:grid-cols-[0.34fr_0.66fr]">
-          <div className="rounded-[1.2rem] border border-black/6 bg-[#fafbfc] p-4">
-            <div className="h-4 w-24 animate-pulse rounded-full bg-[#d7e5ef]" />
-            <div className="mt-4 space-y-3">
-              <div className="h-10 animate-pulse rounded-[0.9rem] bg-[#eef3f6]" />
-              <div className="h-10 animate-pulse rounded-[0.9rem] bg-[#eef3f6]" />
-              <div className="h-10 animate-pulse rounded-[0.9rem] bg-[#eef3f6]" />
-            </div>
-          </div>
-
-          <div className="rounded-[1.2rem] border border-black/6 bg-[#fafbfc] p-4">
-            <div className="grid gap-3 sm:grid-cols-3">
-              <div className="h-16 animate-pulse rounded-[1rem] bg-[#eef3f6]" />
-              <div className="h-16 animate-pulse rounded-[1rem] bg-[#eef3f6]" />
-              <div className="h-16 animate-pulse rounded-[1rem] bg-[#eef3f6]" />
-            </div>
-            <div className="mt-4 h-52 animate-pulse rounded-[1.2rem] bg-[linear-gradient(135deg,#f2ede4,#d8e4ee)]" />
-          </div>
-        </div>
+      <div className="flex items-center gap-2">
+        <span className="rounded-full border border-black/8 bg-white/58 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.26em] text-[#627180]">
+          Agenda
+        </span>
+        <span className="inline-flex items-center gap-2 rounded-full border border-black/8 bg-white/72 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.24em] text-[#44515d]">
+          <span className="h-2 w-2 rounded-full bg-[#111821]" />
+          Disponibilidade
+        </span>
       </div>
     </div>
   );
 }
 
-function FallbackCard({
-  placeholderLabel,
-  reason,
+function CalendarScaffold({
+  animated = false,
+  note,
 }: {
-  placeholderLabel: string;
-  reason: FallbackReason;
+  animated?: boolean;
+  note: string;
 }) {
+  const pulseClassName = animated ? "animate-pulse" : "";
+
   return (
-    <>
-      <div className="flex items-center justify-between gap-4 border-b border-black/8 pb-4">
-        <div>
-          <p className="text-xs font-medium uppercase tracking-[0.3em] text-[#6a7684]">
-            {placeholderLabel}
-          </p>
-          <p className="mt-2 text-sm leading-7 text-[#56626f]">{getFallbackMessage(reason)}</p>
-        </div>
-        <span className="rounded-full border border-black/8 bg-[#111418] px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-white">
-          Cal.com
-        </span>
-      </div>
-
-      <div className="mt-5 rounded-[1.6rem] border border-dashed border-[#bfd0dd] bg-[#f9fafb] p-4 sm:p-5">
-        <div className="grid gap-4 sm:grid-cols-[0.34fr_0.66fr]">
-          <div className="rounded-[1.3rem] border border-black/6 bg-white p-4">
-            <div className="h-4 w-24 rounded-full bg-[#d7e5ef]" />
-            <div className="mt-4 space-y-3">
-              <div className="h-10 rounded-[0.9rem] bg-[#eef3f6]" />
-              <div className="h-10 rounded-[0.9rem] bg-[#eef3f6]" />
-              <div className="h-10 rounded-[0.9rem] bg-[#eef3f6]" />
-            </div>
-          </div>
-
-          <div className="rounded-[1.3rem] border border-black/6 bg-white p-4">
-            <div className="grid gap-3 sm:grid-cols-3">
-              <div className="h-16 rounded-[1rem] bg-[#eef3f6]" />
-              <div className="h-16 rounded-[1rem] bg-[#eef3f6]" />
-              <div className="h-16 rounded-[1rem] bg-[#eef3f6]" />
-            </div>
-            <div className="mt-4 h-44 rounded-[1.2rem] bg-[linear-gradient(135deg,#f2ede4,#d8e4ee)]" />
+    <div className="h-[38rem] sm:h-[41rem]">
+      <div className="grid h-full gap-3 lg:grid-cols-[0.28fr_0.72fr]">
+        <div className="flex flex-col rounded-[1.45rem] border border-black/6 bg-[#f6f3ed]/90 p-4 sm:p-5">
+          <div className={`h-3 w-24 rounded-full bg-[#d7e0e8] ${pulseClassName}`} />
+          <div className="mt-5 space-y-3">
+            {Array.from({ length: 5 }).map((_, index) => (
+              <div
+                key={index}
+                className="rounded-[1.15rem] border border-black/5 bg-white/82 p-3 shadow-[0_10px_28px_rgba(17,20,24,0.04)]"
+              >
+                <div className={`h-3 w-20 rounded-full bg-[#dbe4eb] ${pulseClassName}`} />
+                <div className={`mt-3 h-10 rounded-[0.95rem] bg-[#eef3f6] ${pulseClassName}`} />
+              </div>
+            ))}
           </div>
         </div>
+
+        <div className="flex flex-col rounded-[1.45rem] border border-black/6 bg-white/90 p-4 shadow-[0_18px_42px_rgba(17,20,24,0.08)] sm:p-5">
+          <div className="flex flex-wrap items-center gap-2">
+            <div className={`h-10 w-40 rounded-full bg-[#eef3f6] ${pulseClassName}`} />
+            <div className={`h-10 w-28 rounded-full bg-[#f3ede4] ${pulseClassName}`} />
+            <div className={`h-10 w-24 rounded-full bg-[#e4edf4] ${pulseClassName}`} />
+          </div>
+
+          <div className="mt-4 grid gap-3 sm:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <div
+                key={index}
+                className={`h-20 rounded-[1.1rem] border border-black/5 ${
+                  index === 2
+                    ? "bg-[linear-gradient(160deg,#e8edf2_0%,#f1e8db_100%)]"
+                    : "bg-[#f7f9fa]"
+                } ${pulseClassName}`}
+              />
+            ))}
+          </div>
+
+          <div className="mt-4 flex-1 rounded-[1.35rem] border border-black/5 bg-[linear-gradient(180deg,#fbfcfd_0%,#f5f1ea_100%)] p-4 sm:p-5">
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className={`h-4 w-24 rounded-full bg-[#d7e0e8] ${pulseClassName}`} />
+              <div className={`h-4 w-20 rounded-full bg-[#e4d8c6] ${pulseClassName}`} />
+            </div>
+
+            <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+              {Array.from({ length: 9 }).map((_, index) => (
+                <div
+                  key={index}
+                  className={`h-14 rounded-[1rem] border border-black/5 ${
+                    index === 4 ? "bg-[#111821]" : "bg-white/92"
+                  } ${pulseClassName}`}
+                />
+              ))}
+            </div>
+
+            <div className="mt-5 rounded-[1.2rem] border border-black/5 bg-white/76 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]">
+              <div className={`h-4 w-32 rounded-full bg-[#d7e0e8] ${pulseClassName}`} />
+              <div className={`mt-3 h-20 rounded-[1rem] bg-[#f2f5f7] ${pulseClassName}`} />
+            </div>
+          </div>
+        </div>
       </div>
-    </>
+
+      <div className="mt-4 rounded-[1.2rem] border border-black/6 bg-[linear-gradient(135deg,rgba(255,255,255,0.8),rgba(239,244,247,0.9))] px-4 py-3 text-sm leading-6 text-[#56626f] shadow-[0_12px_30px_rgba(17,20,24,0.05)]">
+        {note}
+      </div>
+    </div>
   );
 }
 
-export function CalEmbedPanel({ placeholderLabel }: CalEmbedPanelProps) {
+function LoadingCard() {
+  return (
+    <div className="absolute inset-0 z-10 rounded-[1.65rem] bg-[linear-gradient(180deg,rgba(248,244,238,0.92),rgba(241,245,248,0.96))] p-2.5 backdrop-blur-[2px] sm:p-3">
+      <CalendarScaffold animated note="Carregando a agenda da equipe." />
+    </div>
+  );
+}
+
+function FallbackPreview() {
+  return (
+    <CalendarScaffold note="A disponibilidade aparece aqui assim que a agenda estiver pronta." />
+  );
+}
+
+export function CalEmbedPanel() {
   const rawCalLink = process.env.NEXT_PUBLIC_CAL_LINK;
   const normalizedCalLink = normalizeCalLink(rawCalLink);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -404,7 +426,9 @@ export function CalEmbedPanel({ placeholderLabel }: CalEmbedPanelProps) {
     }
 
     capturePostHogEvent("cal_embed_fallback_rendered", {
-      cal_link: normalizedCalLink ?? rawCalLink ?? null,
+      cal_link: normalizedCalLink ?? null,
+      pathname: getCurrentPathname(),
+      provided_cal_link: rawCalLink ?? null,
       reason: fallbackReason,
     });
 
@@ -442,6 +466,7 @@ export function CalEmbedPanel({ placeholderLabel }: CalEmbedPanelProps) {
       capturePostHogEvent("cal_embed_viewed", {
         cal_link: normalizedCalLink,
         namespace: event.detail.namespace,
+        pathname: getCurrentPathname(),
         type: event.detail.type,
       });
     };
@@ -455,6 +480,7 @@ export function CalEmbedPanel({ placeholderLabel }: CalEmbedPanelProps) {
         end_time: booking.endTime,
         event_type_id: booking.eventTypeId ?? undefined,
         is_recurring: booking.isRecurring,
+        pathname: getCurrentPathname(),
         payment_required: booking.paymentRequired,
         start_time: booking.startTime,
         status: booking.status,
@@ -477,6 +503,7 @@ export function CalEmbedPanel({ placeholderLabel }: CalEmbedPanelProps) {
         cal_link: normalizedCalLink,
         code: failure.code,
         message: failure.msg,
+        pathname: getCurrentPathname(),
         reason: "link_failed",
       });
     };
@@ -540,6 +567,7 @@ export function CalEmbedPanel({ placeholderLabel }: CalEmbedPanelProps) {
         capturePostHogEvent("cal_embed_error", {
           cal_link: normalizedCalLink,
           message: error instanceof Error ? error.message : "Unknown Cal.com embed error.",
+          pathname: getCurrentPathname(),
           reason,
         });
       }
@@ -555,34 +583,31 @@ export function CalEmbedPanel({ placeholderLabel }: CalEmbedPanelProps) {
   }, [normalizedCalLink]);
 
   return (
-    <div className="rounded-[2rem] border border-dashed border-[#9bb1c2] bg-white/65 p-5 shadow-[0_16px_40px_rgba(17,20,24,0.06)]">
-      {status === "fallback" ? (
-        <FallbackCard placeholderLabel={placeholderLabel} reason={fallbackReason} />
-      ) : (
-        <>
-          <div className="flex items-center justify-between gap-4 border-b border-black/8 pb-4">
-            <div>
-              <p className="text-xs font-medium uppercase tracking-[0.3em] text-[#6a7684]">
-                Agendamento ao vivo
-              </p>
-              <p className="mt-2 text-sm leading-7 text-[#56626f]">
-                Escolha o melhor horario e fale com a equipe comercial sem sair da landing.
-              </p>
-            </div>
-            <span className="rounded-full border border-black/8 bg-[#111418] px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-white">
-              Cal.com
-            </span>
-          </div>
+    <div className="relative h-full min-h-[38rem]">
+      <div className="pointer-events-none absolute inset-x-10 top-6 h-32 rounded-full bg-[#8fb7d1]/18 blur-3xl" />
+      <div className="pointer-events-none absolute bottom-4 left-8 h-24 w-24 rounded-full bg-[#dfc49f]/20 blur-3xl" />
 
-          <div className="relative mt-5 overflow-hidden rounded-[1.6rem] border border-[#bfd0dd] bg-[#f9fafb] p-1.5 sm:p-2">
-            <div
-              ref={containerRef}
-              className="h-[36rem] rounded-[1.2rem] bg-white sm:h-[40rem]"
-            />
-            {status === "loading" ? <LoadingCard /> : null}
+      <div className="relative flex h-full min-h-[38rem] flex-col overflow-hidden rounded-[2.25rem] border border-white/12 bg-[linear-gradient(165deg,rgba(248,244,236,0.98)_0%,rgba(240,244,247,0.98)_54%,rgba(224,232,239,0.98)_100%)] p-3 shadow-[0_30px_90px_rgba(17,20,24,0.24)] sm:min-h-[41rem] sm:p-4">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.48),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(143,183,209,0.22),transparent_24%)]" />
+
+        <div className="relative flex h-full flex-col">
+          <PanelChrome />
+
+          <div className="relative flex-1 overflow-hidden rounded-[1.85rem] border border-black/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.82),rgba(247,244,238,0.95))] p-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.42)] sm:p-3">
+            {status === "fallback" ? (
+              <FallbackPreview />
+            ) : (
+              <>
+                <div
+                  ref={containerRef}
+                  className="h-[38rem] rounded-[1.45rem] bg-white shadow-[0_18px_42px_rgba(17,20,24,0.08)] sm:h-[41rem]"
+                />
+                {status === "loading" ? <LoadingCard /> : null}
+              </>
+            )}
           </div>
-        </>
-      )}
+        </div>
+      </div>
     </div>
   );
 }
