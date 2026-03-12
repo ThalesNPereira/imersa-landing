@@ -263,40 +263,40 @@ export const landingContent = {
   } satisfies BookDemoContent,
   faqIntro: {
     eyebrow: "FAQ",
-    title: "Perguntas frequentes para remover objecoes antes do contato.",
+    title: "Duvidas comuns antes de colocar a imersa no seu site.",
     description:
-      "As respostas abaixo sao placeholders em PT-BR e podem ser refinadas depois com linguagem comercial final.",
+      "Respondemos as perguntas mais frequentes sobre integracao, prazo e operacao para voce avaliar a imersa com clareza.",
   } satisfies FaqContent,
   faqs: [
     {
       id: "setup",
       question: "Como funciona o setup inicial?",
       answer:
-        "Placeholder: o setup parte do material ja existente e da definicao do fluxo visual que a experiencia deve comunicar.",
+        "O setup comeca com as fotos do imovel e um alinhamento rapido sobre o objetivo comercial da pagina. A equipe da imersa organiza o material, monta a experiencia interativa e valida a entrega antes da publicacao.",
     },
     {
       id: "hosting",
       question: "Preciso mudar minha hospedagem atual?",
       answer:
-        "Placeholder: nao necessariamente. A proposta e publicar a experiencia via embed, mantendo o site atual como base.",
+        "Nao. A imersa foi pensada para funcionar via embed, entao voce pode manter a hospedagem e o CMS atuais enquanto adiciona a experiencia nas paginas que fizerem sentido.",
     },
     {
       id: "prazo",
       question: "Qual e o prazo de entrega?",
       answer:
-        "Placeholder: o prazo depende do volume de material e do nivel de customizacao, mas a secao deve transmitir um processo enxuto.",
+        "O prazo varia conforme o volume de ambientes e o nivel de personalizacao, mas o processo foi desenhado para ser rapido e sem exigir producao 3D tradicional.",
     },
     {
       id: "wordpress",
       question: "Funciona em WordPress?",
       answer:
-        "Placeholder: sim, o embed foi pensado para entrar em WordPress com implementacao simples.",
+        "Sim. O viewer pode ser incorporado em paginas WordPress com implementacao simples, preservando a estrutura atual do site.",
     },
     {
       id: "customizado",
       question: "E se o site for customizado?",
       answer:
-        "Placeholder: a mesma logica de embed se aplica a sites customizados, desde que exista acesso ao bloco ou template da pagina.",
+        "Sim. Se o seu site for customizado, entregamos a experiencia pronta para embed e apoiamos a equipe responsavel na integracao.",
     },
   ] satisfies FaqItem[],
 };
