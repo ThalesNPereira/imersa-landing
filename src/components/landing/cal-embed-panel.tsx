@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { capturePostHogEvent } from "@/lib/posthog";
 
 const CAL_SCRIPT_SRC = "https://cal.com/embed/embed.js";
+const CAL_ORIGIN = "https://cal.com";
+const CAL_SCRIPT_ID = "cal-inline-embed-script";
 const CAL_THEME = "light";
 const CAL_LAYOUT = "month_view";
 const UTM_KEYS = [
@@ -35,6 +37,10 @@ type CalInlineOptions = {
   calLink: string;
   config?: CalEmbedConfig;
   elementOrSelector: HTMLElement | string;
+};
+
+type CalInitOptions = {
+  origin: string;
 };
 
 type CalUiOptions = {
@@ -69,7 +75,18 @@ type CalLinkFailedData = {
 
 type CalInstructionHandler = (event: CalEmbedEvent) => void;
 
+type CalQueueInstruction = [instruction: string, ...args: unknown[]];
+
+type CalNamespaceApi = {
+  (...args: unknown[]): void;
+  q?: CalQueueInstruction[];
+};
+
 type CalApi = {
+  (
+    instruction: "init",
+    options: CalInitOptions,
+  ): void;
   (
     instruction: "inline",
     options: CalInlineOptions,
@@ -85,6 +102,9 @@ type CalApi = {
     instruction: "ui",
     options: CalUiOptions,
   ): void;
+  loaded?: boolean;
+  ns?: Record<string, CalNamespaceApi>;
+  q?: CalQueueInstruction[];
   version?: string;
 };
 
@@ -95,6 +115,7 @@ declare global {
 }
 
 let calScriptPromise: Promise<void> | null = null;
+let calInitialized = false;
 
 function normalizeCalLink(value: string | undefined) {
   const trimmedValue = value?.trim();
@@ -110,7 +131,7 @@ function normalizeCalLink(value: string | undefined) {
     return normalizedPath || null;
   } catch {
     const normalizedPath = trimmedValue
-      .replace(/^https?:\/\/[^/]+/i, "")
+      .replace(/^(?:https?:\/\/)?(?:www\.)?cal\.com\/?/i, "")
       .replace(/^\/+|\/+$/g, "")
       .replace(/\/embed$/i, "");
 
@@ -135,12 +156,56 @@ function getEmbedConfig() {
   } satisfies CalEmbedConfig;
 }
 
-function loadCalScript() {
+function getCalScriptElement() {
+  return (
+    document.querySelector<HTMLScriptElement>(`script[src="${CAL_SCRIPT_SRC}"]`) ??
+    document.getElementById(CAL_SCRIPT_ID)
+  ) as HTMLScriptElement | null;
+}
+
+function ensureCalScriptElement() {
+  if (typeof window === "undefined") {
+    throw new Error("Cal.com embed can only load in the browser.");
+  }
+
+  const existingScript = getCalScriptElement();
+
+  if (existingScript) {
+    return existingScript;
+  }
+
+  const script = document.createElement("script");
+
+  script.id = CAL_SCRIPT_ID;
+  script.src = CAL_SCRIPT_SRC;
+  script.async = true;
+  script.dataset.calStatus = "loading";
+  script.addEventListener(
+    "load",
+    () => {
+      script.dataset.calStatus = "loaded";
+    },
+    { once: true },
+  );
+  script.addEventListener(
+    "error",
+    () => {
+      script.dataset.calStatus = "error";
+    },
+    { once: true },
+  );
+
+  document.head.appendChild(script);
+
+  return script;
+}
+
+function waitForCalScript() {
   if (typeof window === "undefined") {
     return Promise.reject(new Error("Cal.com embed can only load in the browser."));
   }
 
-  if (window.Cal) {
+  if (window.Cal?.version) {
     return Promise.resolve();
   }
 
@@ -148,67 +213,81 @@ function loadCalScript() {
     return calScriptPromise;
   }
 
-  calScriptPromise = new Promise<void>((resolve, reject) => {
-    const existingScript = document.querySelector<HTMLScriptElement>(
-      `script[src="${CAL_SCRIPT_SRC}"]`,
-    );
+  const script = ensureCalScriptElement();
+  const currentStatus = script.dataset.calStatus;
 
-    const cleanupListeners = (script: HTMLScriptElement, onLoad: () => void, onError: () => void) => {
+  if (currentStatus === "loaded") {
+    return Promise.resolve();
+  }
+
+  if (currentStatus === "error") {
+    return Promise.reject(new Error("Failed to load the Cal.com embed script."));
+  }
+
+  calScriptPromise = new Promise<void>((resolve, reject) => {
+    const cleanupListeners = (onLoad: () => void, onError: () => void) => {
       script.removeEventListener("load", onLoad);
       script.removeEventListener("error", onError);
     };
 
     const onLoad = () => {
-      if (!window.Cal) {
-        calScriptPromise = null;
-        reject(new Error("Cal.com script loaded without exposing window.Cal."));
-        return;
-      }
-
+      cleanupListeners(onLoad, onError);
+      script.dataset.calStatus = "loaded";
       resolve();
     };
 
     const onError = () => {
+      cleanupListeners(onLoad, onError);
+      script.dataset.calStatus = "error";
       calScriptPromise = null;
       reject(new Error("Failed to load the Cal.com embed script."));
     };
 
-    if (existingScript) {
-      if (window.Cal) {
-        resolve();
-        return;
-      }
-
-      existingScript.addEventListener("load", onLoad, { once: true });
-      existingScript.addEventListener("error", onError, { once: true });
-      return;
-    }
-
-    const script = document.createElement("script");
-
-    script.src = CAL_SCRIPT_SRC;
-    script.async = true;
-    script.addEventListener(
-      "load",
-      () => {
-        cleanupListeners(script, onLoad, onError);
-        onLoad();
-      },
-      { once: true },
-    );
-    script.addEventListener(
-      "error",
-      () => {
-        cleanupListeners(script, onLoad, onError);
-        onError();
-      },
-      { once: true },
-    );
-
-    document.head.appendChild(script);
+    script.addEventListener("load", onLoad, { once: true });
+    script.addEventListener("error", onError, { once: true });
   });
 
   return calScriptPromise;
+}
+
+function queueCalInstruction(target: { q?: CalQueueInstruction[] }, args: unknown[]) {
+  target.q = target.q ?? [];
+  target.q.push(args as CalQueueInstruction);
+}
+
+function createCalBootstrapApi() {
+  const cal = ((...args: unknown[]) => {
+    queueCalInstruction(cal, args);
+  }) as CalApi;
+
+  cal.loaded = true;
+  cal.ns = {};
+  cal.q = [];
+
+  return cal;
+}
+
+function bootstrapCal() {
+  if (typeof window === "undefined") {
+    throw new Error("Cal.com embed can only load in the browser.");
+  }
+
+  if (!window.Cal) {
+    window.Cal = createCalBootstrapApi();
+  } else {
+    window.Cal.loaded = true;
+    window.Cal.ns = window.Cal.ns ?? {};
+    window.Cal.q = window.Cal.q ?? [];
+  }
+
+  void waitForCalScript().catch(() => undefined);
+
+  if (!calInitialized) {
+    window.Cal("init", { origin: CAL_ORIGIN });
+    calInitialized = true;
+  }
+
+  return window.Cal;
 }
 
 function getFallbackMessage(reason: FallbackReason) {
@@ -343,6 +422,7 @@ export function CalEmbedPanel({ placeholderLabel }: CalEmbedPanelProps) {
     viewedTrackedRef.current = false;
 
     let isMounted = true;
+    let handlersAttached = false;
 
     const handleLinkReady: CalInstructionHandler = () => {
       if (!isMounted) {
@@ -402,7 +482,7 @@ export function CalEmbedPanel({ placeholderLabel }: CalEmbedPanelProps) {
     };
 
     const cleanupHandlers = () => {
-      if (!window.Cal) {
+      if (!handlersAttached || !window.Cal) {
         return;
       }
 
@@ -413,26 +493,33 @@ export function CalEmbedPanel({ placeholderLabel }: CalEmbedPanelProps) {
         callback: handleBookingSuccessful,
       });
       window.Cal("off", { action: "linkFailed", callback: handleLinkFailed });
+      handlersAttached = false;
     };
 
     const mountEmbed = async () => {
       try {
-        await loadCalScript();
+        const cal = bootstrapCal();
+        await waitForCalScript();
 
         if (!isMounted || !window.Cal) {
           return;
         }
 
+        if (!window.Cal.version) {
+          throw new Error("Cal.com script loaded without hydrating the embed API.");
+        }
+
         containerElement.replaceChildren();
-        window.Cal("on", { action: "linkReady", callback: handleLinkReady });
-        window.Cal("on", { action: "bookerViewed", callback: handleBookerViewed });
-        window.Cal("on", {
+        cal("on", { action: "linkReady", callback: handleLinkReady });
+        cal("on", { action: "bookerViewed", callback: handleBookerViewed });
+        cal("on", {
           action: "bookingSuccessfulV2",
           callback: handleBookingSuccessful,
         });
-        window.Cal("on", { action: "linkFailed", callback: handleLinkFailed });
-        window.Cal("ui", { theme: CAL_THEME });
-        window.Cal("inline", {
+        cal("on", { action: "linkFailed", callback: handleLinkFailed });
+        handlersAttached = true;
+        cal("ui", { theme: CAL_THEME });
+        cal("inline", {
           calLink: normalizedCalLink,
           config: getEmbedConfig(),
           elementOrSelector: containerElement,
