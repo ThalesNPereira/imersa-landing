@@ -248,6 +248,11 @@ export const landingContent = {
         label: "Angular",
         logoSrc: "/compatibility/angular.svg",
       },
+      {
+        id: "shopify",
+        label: "Shopify",
+        logoSrc: "/compatibility/shopify.svg",
+      },
     ],
   } satisfies CompatibilityContent,
   bookDemo: {
