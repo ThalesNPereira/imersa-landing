@@ -72,15 +72,17 @@ export type BenefitsContent = {
   description: string;
 };
 
-export type TestimonialContent = {
+export type CompatibilityItem = {
+  id: string;
+  label: string;
+  logoSrc: string;
+};
+
+export type CompatibilityContent = {
   eyebrow: string;
   title: string;
-  quote: string;
-  author: string;
-  role: string;
-  company: string;
-  note: string;
-  highlights: string[];
+  description: string;
+  items: CompatibilityItem[];
 };
 
 export type BookDemoContent = {
@@ -244,17 +246,59 @@ export const landingContent = {
         "Apresente im\u00f3veis de forma mais sofisticada, aumente percep\u00e7\u00e3o de inova\u00e7\u00e3o e fortale\u00e7a sua presen\u00e7a digital.",
     },
   ] satisfies BenefitItem[],
-  testimonial: {
-    eyebrow: "Depoimento / case",
-    title: "Um quote forte ajuda a reduzir friccao antes do agendamento.",
-    quote:
-      "A experiencia deixou a apresentacao do imovel muito mais clara para o cliente final e elevou a percepcao da nossa pagina comercial.",
-    author: "Nome do cliente",
-    role: "Cargo do responsavel",
-    company: "Empresa / incorporadora",
-    note: "Conteudo de exemplo. Substituir por um depoimento real assim que o case estiver aprovado.",
-    highlights: ["Pagina comercial", "Produto premium", "Experiencia guiada"],
-  } satisfies TestimonialContent,
+  compatibility: {
+    eyebrow: "Compatibilidade",
+    title: "Funciona no stack que sua operação já usa",
+    description:
+      "Publique o viewer da imersa em CMSs, frameworks e páginas customizadas com um embed simples.",
+    items: [
+      {
+        id: "wordpress",
+        label: "WordPress",
+        logoSrc: "/compatibility/wordpress.svg",
+      },
+      {
+        id: "react",
+        label: "React",
+        logoSrc: "/compatibility/react.svg",
+      },
+      {
+        id: "nextjs",
+        label: "Next.js",
+        logoSrc: "/compatibility/nextjs.svg",
+      },
+      {
+        id: "html",
+        label: "HTML",
+        logoSrc: "/compatibility/html.svg",
+      },
+      {
+        id: "webflow",
+        label: "Webflow",
+        logoSrc: "/compatibility/webflow.svg",
+      },
+      {
+        id: "shopify",
+        label: "Shopify",
+        logoSrc: "/compatibility/shopify.svg",
+      },
+      {
+        id: "angular",
+        label: "Angular",
+        logoSrc: "/compatibility/angular.svg",
+      },
+      {
+        id: "vue",
+        label: "Vue",
+        logoSrc: "/compatibility/vue.svg",
+      },
+      {
+        id: "javascript",
+        label: "JavaScript",
+        logoSrc: "/compatibility/javascript.svg",
+      },
+    ],
+  } satisfies CompatibilityContent,
   bookDemo: {
     eyebrow: "Agendar demo",
     title: "Veja a imersa aplicada ao seu portfolio em uma conversa objetiva.",

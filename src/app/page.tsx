@@ -1,11 +1,11 @@
 import { BenefitsSection } from "@/components/landing/benefits-section";
 import { BookDemoSection } from "@/components/landing/book-demo-section";
+import { CompatibilitySection } from "@/components/landing/compatibility-section";
 import { FaqSection } from "@/components/landing/faq-section";
 import { HeroSection } from "@/components/landing/hero-section";
 import { HowItWorksSection } from "@/components/landing/how-it-works-section";
 import { ProductPreviewSection } from "@/components/landing/product-preview-section";
 import { SiteHeader } from "@/components/landing/site-header";
-import { TestimonialSection } from "@/components/landing/testimonial-section";
 import { landingContent } from "@/content/landing";
 
 export default function Home() {
@@ -33,7 +33,7 @@ export default function Home() {
           intro={landingContent.benefitsIntro}
           benefits={landingContent.benefits}
         />
-        <TestimonialSection content={landingContent.testimonial} />
+        <CompatibilitySection content={landingContent.compatibility} />
         <BookDemoSection content={landingContent.bookDemo} />
         <FaqSection intro={landingContent.faqIntro} faqs={landingContent.faqs} />
       </div>
