@@ -31,32 +31,15 @@ export type StepItem = {
   support: string;
 };
 
-export type ProductPreviewMetric = {
-  label: string;
-  value: string;
-};
-
-export type ProductPreviewPanel = {
+export type ProductPreviewItem = {
   id: string;
   title: string;
-  description: string;
-};
-
-export type ProductPreviewCallout = {
-  id: string;
-  label: string;
-  detail: string;
+  imageSrc: string;
+  viewerLabel: string;
 };
 
 export type ProductPreviewContent = {
-  eyebrow: string;
-  title: string;
-  description: string;
-  note: string;
-  ctaLabel: string;
-  metrics: ProductPreviewMetric[];
-  panels: ProductPreviewPanel[];
-  callouts: ProductPreviewCallout[];
+  items: ProductPreviewItem[];
 };
 
 export type BenefitItem = {
@@ -81,7 +64,8 @@ export type CompatibilityItem = {
 export type CompatibilityContent = {
   eyebrow: string;
   title: string;
-  description: string;
+  supportLine: string;
+  footerNote: string;
   items: CompatibilityItem[];
 };
 
@@ -164,54 +148,24 @@ export const landingContent = {
     },
   ] satisfies StepItem[],
   productPreview: {
-    eyebrow: "Preview do produto",
-    title: "A secao mais importante depois do hero ja nasce com espaco, hierarquia e placeholder visual.",
-    description:
-      "Aqui entra a demo real no futuro. Por enquanto, a estrutura comunica a proposta do produto com um mock interativo de alta prioridade.",
-    note: "Placeholder visual para substituir por demo ou gravacao real do produto.",
-    ctaLabel: "Agendar demo",
-    metrics: [
-      { label: "Contexto visual", value: "Mais clareza" },
-      { label: "Publicacao", value: "Embed simples" },
-      { label: "Operacao", value: "Sem captura 3D" },
-    ],
-    panels: [
+    items: [
       {
-        id: "navegacao",
-        title: "Navegacao guiada",
-        description: "Bloco para mostrar rotas, hotspots e sequencia visual do imovel.",
+        id: "quarto",
+        title: "Quarto",
+        imageSrc: "/empreendimento/Quarto.avif",
+        viewerLabel: "Viewer_Quarto",
       },
       {
-        id: "destaques",
-        title: "Destaques do imovel",
-        description: "Espaco para callouts de acabamentos, plantas e areas-chave.",
+        id: "cozinha",
+        title: "Cozinha",
+        imageSrc: "/empreendimento/Cozinha.avif",
+        viewerLabel: "Viewer_Cozinha",
       },
       {
-        id: "embed",
-        title: "Embed no site",
-        description: "Placeholder para reforcar a integracao com WordPress e stacks customizadas.",
-      },
-    ],
-    callouts: [
-      {
-        id: "callout-listagem",
-        label: "Listagem mais diferenciada",
-        detail: "Callout de valor principal",
-      },
-      {
-        id: "callout-3d",
-        label: "Sem captura 3D",
-        detail: "Mensagem operacional",
-      },
-      {
-        id: "callout-embed",
-        label: "Embed em minutos",
-        detail: "Publicacao simplificada",
-      },
-      {
-        id: "callout-engajamento",
-        label: "Melhor engajamento",
-        detail: "Mais permanencia na pagina",
+        id: "sala",
+        title: "Sala",
+        imageSrc: "/empreendimento/Sala.avif",
+        viewerLabel: "Viewer_Sala",
       },
     ],
   } satisfies ProductPreviewContent,
@@ -248,9 +202,11 @@ export const landingContent = {
   ] satisfies BenefitItem[],
   compatibility: {
     eyebrow: "Compatibilidade",
-    title: "Funciona no stack que sua operação já usa",
-    description:
-      "Publique o viewer da imersa em CMSs, frameworks e páginas customizadas com um embed simples.",
+    title: "Compatível com a estrutura do seu site",
+    supportLine:
+      "Publique o viewer da imersa em WordPress, sites customizados e frameworks modernos de frontend.",
+    footerNote:
+      "Precisa de uma implementação personalizada? Nossa equipe pode ajudar com a integração.",
     items: [
       {
         id: "wordpress",
@@ -268,24 +224,19 @@ export const landingContent = {
         logoSrc: "/compatibility/nextjs.svg",
       },
       {
-        id: "html",
-        label: "HTML",
-        logoSrc: "/compatibility/html.svg",
-      },
-      {
         id: "webflow",
         label: "Webflow",
         logoSrc: "/compatibility/webflow.svg",
       },
       {
-        id: "shopify",
-        label: "Shopify",
-        logoSrc: "/compatibility/shopify.svg",
+        id: "html",
+        label: "HTML",
+        logoSrc: "/compatibility/html.svg",
       },
       {
-        id: "angular",
-        label: "Angular",
-        logoSrc: "/compatibility/angular.svg",
+        id: "javascript",
+        label: "JavaScript",
+        logoSrc: "/compatibility/javascript.svg",
       },
       {
         id: "vue",
@@ -293,9 +244,9 @@ export const landingContent = {
         logoSrc: "/compatibility/vue.svg",
       },
       {
-        id: "javascript",
-        label: "JavaScript",
-        logoSrc: "/compatibility/javascript.svg",
+        id: "angular",
+        label: "Angular",
+        logoSrc: "/compatibility/angular.svg",
       },
     ],
   } satisfies CompatibilityContent,
